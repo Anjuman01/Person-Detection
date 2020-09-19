@@ -1,0 +1,124 @@
+char command;
+String string;
+boolean ledon = false;
+#define led 3
+boolean fanon = false;
+#define fan 5
+int pir = 6;
+int pir_led = 7;
+
+void setup()
+{
+Serial.begin(9600);
+pinMode(led, OUTPUT);
+pinMode(fan, OUTPUT);
+pinMode(pir, INPUT);// setting pir output as arduino input
+pinMode(pir_led, OUTPUT);//setting led as output
+while(millis()<13000)
+{
+  digitalWrite(led,HIGH);
+  delay(50);
+  digitalWrite(led,LOW);
+  delay(50);
+  }
+  digitalWrite(led,LOW);
+}
+void loop()
+{
+  int val = digitalRead(pir);
+  if(val == HIGH)
+  {
+    t=millis();
+    while(millis()<(t+5000))
+    digitalWrite(led,HIGH);
+    Serial.println("Motion");
+    if((millis()>(t+2300))&&(val == HIGH)
+    {
+      t=millis();
+      }
+ 
+  }
+  else
+  {
+    digitalWrite(led,LOW);
+        Serial.println("Motion not detcted");
+    }
+ 
+if (Serial.available() > 0)
+{
+  string = "";
+ }
+while(Serial.available() > 0)
+{
+   command = ((byte)Serial.read());
+  if(command == ':')
+  {
+  break;
+  }
+  else
+  {
+  string += command;
+  }
+  delay(1);
+ }
+if(string == "TO")
+{
+  ledOn();
+  ledon = true;
+}
+if(string == "TF")
+{
+  ledOff();
+  ledon = false;
+  Serial.println(string); //debug
+}
+if ((string.toInt()>=0)&&(string.toInt()<=255))
+{
+  if (ledon==true)
+  {
+  analogWrite(led, string.toInt());
+  Serial.println(string); //debug
+  delay(10);
+  }
+}
+if(string == "FO")
+{
+  fanOn();
+  fanon = true;
+}
+if(string =="FF")
+{
+  fanOff();
+  fanon = false;
+  Serial.println(string); //debug
+}
+if ((string.toInt()>=0)&&(string.toInt()<=255))
+{
+  if (fanon==true)
+  {
+  analogWrite(fan, string.toInt());
+  Serial.println(string); //debug
+  delay(10);
+  }
+}
+}
+void ledOn()
+{
+analogWrite(led, 255);
+delay(10);
+}
+void ledOff()
+{
+analogWrite(led, 0);
+delay(10);
+}
+void fanOn()
+{
+analogWrite(fan, 255);
+delay(10);
+}
+void fanOff()
+{
+analogWrite(fan, 0);
+delay(10);
+}
